@@ -1,4 +1,9 @@
 const commandInfoMap = {
+  4k: {
+    name: "4k",
+    description: "enhances your image to high quality picture",
+    guide: "reply to image and type -4k"
+  },
   ai: {
     name: "ai",
     description: "Ai Based on GPT-4",
@@ -89,6 +94,7 @@ module.exports = {
       const commandsList = `━━━━━━━━━━━━━━━━
 𝙰𝚟𝚊𝚒𝚕𝚊𝚋𝚕𝚎 𝙲𝚘𝚖𝚖𝚊𝚗𝚍𝚜:
 ╭─╼━━━━━━━━╾─╮
+│ - 4k
 │ - AI
 │ - Translate
 │ - Animagine
