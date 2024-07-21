@@ -69,6 +69,11 @@ animagine: {
     description: "deletes bot messages",
     guide: "reply to bot message and type -unsend"
   },
+waifu: {
+    name: "waifu",
+    description: "makes random waifu",
+    guide: "{pn} {{<name>}}"
+    },
 };
 
 module.exports = {
@@ -108,6 +113,7 @@ module.exports = {
 │ - Tempmail
 │ - Unsend
 │ - Uptime
+│ - waifu
 ╰─━━━━━━━━━╾─╯
 -𝚑𝚎𝚕𝚙 <𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚗𝚊𝚖𝚎>
 𝚃𝚘 𝚜𝚎𝚎 𝚑𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎
