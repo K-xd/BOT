@@ -1,13 +1,13 @@
 const commandInfoMap = {
-  4k: {
-    name: "4k",
-    description: "enhances your image to high quality picture",
-    guide: "reply to image and type -4k"
-  },
   ai: {
     name: "ai",
     description: "Ai Based on GPT-4",
     guide: "-ai what is life?"
+    },
+  spotify: {
+    name: "spotify",
+    description: "play song from spotify",
+    guide: "-spotify <song title> <artist>\nexample:\n-spotify perfect by ed sheeran"
     },
   tempmail: {
     name: "tempmail",
@@ -69,11 +69,6 @@ animagine: {
     description: "deletes bot messages",
     guide: "reply to bot message and type -unsend"
   },
-waifu: {
-    name: "waifu",
-    description: "makes random waifu",
-    guide: "{pn} {{<name>}}"
-    },
 };
 
 module.exports = {
@@ -99,7 +94,6 @@ module.exports = {
       const commandsList = `━━━━━━━━━━━━━━━━
 𝙰𝚟𝚊𝚒𝚕𝚊𝚋𝚕𝚎 𝙲𝚘𝚖𝚖𝚊𝚗𝚍𝚜:
 ╭─╼━━━━━━━━╾─╮
-│ - 4k
 │ - AI
 │ - Translate
 │ - Animagine
@@ -113,7 +107,6 @@ module.exports = {
 │ - Tempmail
 │ - Unsend
 │ - Uptime
-│ - waifu
 ╰─━━━━━━━━━╾─╯
 -𝚑𝚎𝚕𝚙 <𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚗𝚊𝚖𝚎>
 𝚃𝚘 𝚜𝚎𝚎 𝚑𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎
