@@ -33,7 +33,7 @@ module.exports = {
             return api.sendMessage("❌ | Failed to generate email. Please try again later.", event.threadID, event.messageID);
           }
         }
-        return api.sendMessage(`📩 Generated email: ${email}`, event.threadID, event.messageID);
+        return api.sendMessage(` email: ${email}`, event.threadID, event.messageID);
       } else if (command === "inbox" && args.length === 2) {
         const email = args[1];
         if (!email) {
