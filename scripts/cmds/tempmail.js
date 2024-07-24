@@ -1,72 +1,64 @@
-const axios = require("axios");
+const { TempMail } = require("1secmail-api");
+
+function generateRandomId() {
+                var length = 6;
+                var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                var randomId = '';
+
+                for (var i = 0; i < length; i++) {
+                                randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+
+                return randomId;
+}
 
 module.exports = {
-  config: {
-    name: "tempmail",
-    version: "1.0",
-    author: "ARN",
-    countDown: 5,
-    role: 0,
-    category: "tool",
-  },
+                config: {
+                                name: 'temp',
+                                version: '2.1.0',
+                                author: "Deku", // not change credits
+                                countDown: 5,
+                                role: 0,
+                                shortDescription: 'Generate temporary email (auto get inbox)',
+                                category: 'generate',
+                                guide: {
+                                                en: '[tempmail]'
+                                }
+                },
 
-  onStart: async function ({ api, args, event }) {
-    try {
-      if (args.length === 0) {
-        return api.sendMessage("Use '-tempmail create' to generate a temporary email or '-tempmail inbox (email)' to retrieve inbox messages.", event.threadID, event.messageID);
-      }
+                onStart: async function ({ api, event }) {
+                                const reply = (msg) => api.sendMessage(msg, event.threadID, event.messageID);
 
-      const command = args[0].toLowerCase();
+                                try {
+                                                // Generate temporary email
+                                                const mail = new TempMail(generateRandomId());
 
-      if (command === "create") {
-        let email;
-        try {
-          const response = await axios.get("https://for-devs.onrender.com/api/mail/gen?apikey=api1");
-          email = response.data.email;
-        } catch (error) {
-          console.error("❌ | Primary API failed for email generation", error);
-          try {
-            const response = await axios.get("https://markdevs-last-api.onrender.com/api/gen");
-            email = response.data.email;
-          } catch (error) {
-            console.error("❌ | Secondary API failed for email generation", error);
-            return api.sendMessage("❌ | Failed to generate email. Please try again later.", event.threadID, event.messageID);
-          }
-        }
-        return api.sendMessage(` email: ${email}`, event.threadID, event.messageID);
-      } else if (command === "inbox" && args.length === 2) {
-        const email = args[1];
-        if (!email) {
-          return api.sendMessage("❌ | Provide an email address for the inbox.", event.threadID, event.messageID);
-        }
+                                                // Auto fetch
+                                                mail.autoFetch();
 
-        let inboxMessages;
-        try {
-          const inboxResponse = await axios.get(`https://for-devs.onrender.com/api/mail/inbox?email=${email}&apikey=api1`);
-          inboxMessages = inboxResponse.data;
-        } catch (error) {
-          console.error("❌ | Primary API failed for fetching inbox messages", error);
-          try {
-            const inboxResponse = await axios.get(`http://markdevs-last-api.onrender.com/api/getmessage/${email}`);
-            inboxMessages = inboxResponse.data;
-          } catch (error) {
-            console.error("❌ | Secondary API failed for fetching inbox messages", error);
-            return api.sendMessage("❌ | Failed to retrieve inbox messages. Please try again later.", event.threadID, event.messageID);
-          }
-        }
+                                                if (mail) reply("Your temporary email: " + mail.address);
 
-        if (inboxMessages.length === 0) {
-          return api.sendMessage("❌ | No messages found in the inbox.", event.threadID, event.messageID);
-        }
+                                                // Fetch function
+                                                const fetch = () => {
+                                                                mail.getMail().then((mails) => {
+                                                                                if (!mails[0]) {
+                                                                                                return;
+                                                                                } else {
+                                                                                                let b = mails[0];
+                                                                                                var msg = `You have a message!\n\nFrom: ${b.from}\n\nSubject: ${b.subject}\n\nMessage: ${b.textBody}\nDate: ${b.date}`;
+                                                                                                reply(msg + `\n\nOnce the email and message are received, they will be automatically deleted.`);
+                                                                                                return mail.deleteMail();
+                                                                                }
+                                                                });
+                                                };
 
-        const formattedMessages = inboxMessages.map(({ date, sender, message }) => `📅 Date: ${date}\n📧 From: ${sender}\n📩 Message: ${message}`).join('\n\n');
-        return api.sendMessage(`📬 Inbox messages for ${email}:\n\n${formattedMessages}\n\nOld messages will be deleted after some time.`, event.threadID, event.messageID);
-      } else {
-        return api.sendMessage(`❌ | Invalid command. Use '-tempmail create' to generate a temporary email or '-tempmail inbox (email)' to retrieve inbox messages.`, event.threadID, event.messageID);
-      }
-    } catch (error) {
-      console.error(error);
-      return api.sendMessage("❌ | An error occurred. Please try again later.", event.threadID, event.messageID);
-    }
-  }
+                                                // Auto fetch every 3 seconds
+                                                fetch();
+                                                setInterval(fetch, 3 * 1000);
+
+                                } catch (err) {
+                                                console.error(err);
+                                                return reply(err.message);
+                                }
+                }
 };
